@@ -1017,6 +1017,64 @@ footer p {
     }
 }
 
+/* Trailer Section */
+.trailer-section {
+    background-color: var(--dark-bg);
+    position: relative;
+    z-index: 0;
+    text-align: center;
+}
+
+.trailer-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.7));
+    z-index: -1;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 30px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(139, 0, 0, 0.4);
+    animation: fade-in 1.5s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(139, 0, 0, 0.6);
+}
+
+.video-container iframe {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .video-container iframe {
+        height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-container iframe {
+        height: 250px;
+    }
+}
+
 /* Character Silhouettes */
 .hunter {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><filter id="blur" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="1" /></filter></defs><path d="M100,30 L110,50 L120,45 L115,60 L125,70 L115,80 L120,100 L100,120 L80,100 L85,80 L75,70 L85,60 L80,45 L90,50 L100,30" fill="rgba(212, 175, 55, 0.2)" filter="url(%23blur)"/><circle cx="100" cy="45" r="15" fill="rgba(212, 175, 55, 0.3)" filter="url(%23blur)"/><rect x="85" y="120" width="30" height="50" fill="rgba(212, 175, 55, 0.2)" filter="url(%23blur)"/><path d="M85,120 L65,170 M115,120 L135,170" stroke="rgba(212, 175, 55, 0.2)" stroke-width="2" fill="none"/><path d="M70,80 L40,100 M130,80 L160,100" stroke="rgba(212, 175, 55, 0.2)" stroke-width="2" fill="none"/></svg>');
