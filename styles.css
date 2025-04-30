@@ -22,11 +22,42 @@ html {
 
 body {
     font-family: var(--font-body);
-    background-color: var(--dark-bg);
+    background-color: #121212; /* Darker charcoal black */
     color: var(--text-light);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><filter id="noise" x="0%" y="0%" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" stitchTiles="stitch" result="noise"/><feColorMatrix type="matrix" values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.1 0"/></filter><rect width="400" height="400" filter="url(%23noise)" opacity="0.15"/><path d="M50,200 Q100,100 150,180 Q200,250 250,150 Q300,50 350,200" stroke="rgba(50, 50, 50, 0.2)" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M0,300 Q100,250 200,300 Q300,350 400,300" stroke="rgba(50, 50, 50, 0.15)" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M0,100 Q50,150 100,100 Q150,50 200,100 Q250,150 300,100 Q350,50 400,100" stroke="rgba(50, 50, 50, 0.1)" stroke-width="1" fill="none" stroke-linecap="round"/></svg>');
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* Flickering candle light animation */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(139, 0, 0, 0.05), transparent 40%),
+                radial-gradient(circle at 70% 60%, rgba(212, 175, 55, 0.03), transparent 30%);
+    z-index: -1;
+    opacity: 0.7;
+    animation: flicker 8s infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 0.7;
+    }
+    20%, 24%, 55% {
+        opacity: 0.5;
+    }
+    19%, 21%, 23%, 54%, 56% {
+        opacity: 0.8;
+    }
 }
 
 .container {
@@ -117,7 +148,7 @@ section {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-image: url('Frame 3 (2).png');
+    background-image: url('Screenshot 2025-04-26 200949.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -184,6 +215,10 @@ section {
     background-color: var(--dark-accent);
     position: relative;
     z-index: 0;
+    background-image: url('ChatGPT Image Apr 30, 2025, 11_57_26 AM.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .synopsis::before {
@@ -193,8 +228,7 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(212, 175, 55, 0.1)" stroke-width="1"/></svg>');
-    opacity: 0.2;
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.8));
     z-index: -1;
 }
 
@@ -234,14 +268,12 @@ blockquote::after {
     right: -1rem;
 }
 
-/* Characters Section */
+/* Characters Section with Horror Carousel */
 .characters {
-    background-image: url('Frame 4 (2).png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background-color: var(--dark-bg);
     position: relative;
     z-index: 0;
+    overflow: hidden;
 }
 
 .characters::before {
@@ -251,58 +283,99 @@ blockquote::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.6));
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.7));
     z-index: -1;
 }
 
-.character-glimpses {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
+.horror-carousel-container {
     margin-top: 3rem;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0;
 }
 
-.character {
-    flex: 1;
-    min-width: 250px;
-    max-width: 350px;
-    text-align: center;
+.horror-carousel {
+    display: flex;
+    width: 3000px; /* Fixed width to ensure all 9 images are visible */
+    position: relative;
+    margin-bottom: 3rem;
+    animation: moveLeft 15s linear infinite; /* Direct animation on the carousel, faster speed */
+}
+
+@keyframes moveLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-1980px); } /* Move 6/9 of the width to create loop effect */
+}
+
+.horror-image-container {
+    position: relative;
+    overflow: hidden;
+    margin: 0 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    width: 330px; /* Fixed width for each image */
+    height: 350px; /* Fixed height for each image */
+    flex-shrink: 0; /* Prevent images from shrinking */
+}
+
+.horror-image-container:hover {
+    transform: scale(1.03);
+    box-shadow: 0 15px 40px rgba(139, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.horror-image {
+    width: 100%;
+    height: 350px; /* Reduced height for better visibility */
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s ease;
+}
+
+.horror-image-container:hover .horror-image {
+    transform: scale(1.1);
+}
+
+.image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     padding: 1.5rem;
-    background-color: rgba(10, 10, 10, 0.7);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 5px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+    color: var(--text-light);
+    transform: translateY(0);
+    transition: transform 0.5s ease;
 }
 
-.character:hover {
+.horror-image-container:hover .image-caption {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.character-silhouette {
-    height: 200px;
-    margin-bottom: 1.5rem;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.character:hover .character-silhouette {
-    opacity: 1;
-}
-
-.character h3 {
+.image-caption h3 {
     color: var(--gold);
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(139, 0, 0, 0.8);
+}
+
+.image-caption p {
+    font-size: 1rem;
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+/* Add scroll-triggered animation control */
+.horror-carousel.animate-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Atmospheric Section */
 .atmospheric {
-    background-image: url('Frame 5 (1).png');
+    background-image: url('Screenshot 2025-04-30 133100.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -397,6 +470,27 @@ blockquote::after {
     animation: blood-drip 5s ease-in-out;
 }
 
+.tagline-question {
+    color: var(--gold);
+    font-family: var(--font-gothic);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 2rem;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    letter-spacing: 1px;
+    animation: pulse 3s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+    100% {
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+    }
+}
+
 @keyframes blood-drip {
     0% {
         opacity: 0;
@@ -482,22 +576,27 @@ blockquote::after {
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+.social-header {
     margin-top: 2rem;
+    text-align: center;
 }
 
-.social-link {
-    color: var(--text-faded);
-    text-decoration: none;
+.social-header-link {
+    display: inline-block;
+    padding: 0.8rem 2rem;
     font-family: var(--font-gothic);
-    transition: color 0.3s ease;
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    background-color: transparent;
 }
 
-.social-link:hover {
-    color: var(--gold);
+.social-header-link:hover {
+    background-color: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
 /* Audio Section */

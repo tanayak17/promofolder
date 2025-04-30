@@ -20,36 +20,74 @@ document.addEventListener('DOMContentLoaded', function() {
     const sections = [
         {
             elements: [document.querySelector('.hero'), document.querySelector('.synopsis')],
-            audio: audioFirst
+            audio: audioFirst,
+            priority: 1,
+            isVisible: false,
+            visibilityRatio: 0
         },
         {
             elements: [document.querySelector('.characters'), document.querySelector('.atmospheric')],
-            audio: audioMiddle
+            audio: audioMiddle,
+            priority: 2,
+            isVisible: false,
+            visibilityRatio: 0
         },
         {
             elements: [document.querySelector('.cta')],
-            audio: audioLast
+            audio: audioLast,
+            priority: 3,
+            isVisible: false,
+            visibilityRatio: 0
         }
     ];
+    
+    // Track currently playing audio
+    let currentlyPlayingSection = null;
+    
+    // Function to update audio based on section visibility
+    function updateAudio() {
+        // Find the visible section with highest priority
+        let highestPrioritySection = null;
+        let highestVisibilityRatio = 0;
+        
+        sections.forEach(section => {
+            if (section.isVisible && section.visibilityRatio > highestVisibilityRatio) {
+                highestVisibilityRatio = section.visibilityRatio;
+                highestPrioritySection = section;
+            }
+        });
+        
+        // If we have a visible section and it's different from currently playing
+        if (highestPrioritySection && (!currentlyPlayingSection || currentlyPlayingSection !== highestPrioritySection)) {
+            // Stop all audio first
+            if (currentlyPlayingSection) {
+                fadeOutAudio(currentlyPlayingSection.audio);
+            }
+            
+            // Wait a bit before starting new audio to prevent overlap
+            setTimeout(() => {
+                // Make sure we're still the highest priority section
+                if (highestPrioritySection === sections.find(s => s.isVisible && s.visibilityRatio === highestVisibilityRatio)) {
+                    fadeInAudio(highestPrioritySection.audio);
+                    currentlyPlayingSection = highestPrioritySection;
+                }
+            }, 300);
+        }
+    }
     
     // Create intersection observers for each section
     sections.forEach(section => {
         section.elements.forEach(element => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Pause all audio
-                        sections.forEach(s => {
-                            if (s.audio !== section.audio) {
-                                fadeOutAudio(s.audio);
-                            }
-                        });
-                        
-                        // Play this section's audio with fade-in
-                        fadeInAudio(section.audio);
-                    }
+                    // Update section visibility status
+                    section.isVisible = entry.isIntersecting;
+                    section.visibilityRatio = entry.intersectionRatio;
+                    
+                    // Update audio playback
+                    updateAudio();
                 });
-            }, { threshold: 0.3 }); // Trigger when 30% of the section is visible
+            }, { threshold: [0, 0.3, 0.5, 0.7, 1] }); // Track multiple thresholds for better visibility detection
             
             observer.observe(element);
         });
@@ -188,18 +226,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Character card hover effects
-    const characters = document.querySelectorAll('.character');
-    if (characters.length > 0) {
-        characters.forEach(character => {
-            character.addEventListener('mouseenter', function() {
-                this.style.backgroundColor = 'rgba(20, 20, 20, 0.8)';
-                this.style.borderColor = 'rgba(212, 175, 55, 0.5)';
+    // Horror carousel animation control
+    const horrorCarousel = document.querySelector('.single-carousel');
+    if (horrorCarousel) {
+        // Force animation to run immediately
+        horrorCarousel.style.animationPlayState = 'running';
+        horrorCarousel.classList.add('animate-in');
+        
+        // Add hover effect to image containers
+        const imageContainers = document.querySelectorAll('.horror-image-container');
+        imageContainers.forEach(container => {
+            container.addEventListener('mouseenter', function() {
+                // Add subtle glow effect
+                this.style.boxShadow = '0 15px 40px rgba(139, 0, 0, 0.6), 0 0 20px rgba(139, 0, 0, 0.4)';
             });
             
-            character.addEventListener('mouseleave', function() {
-                this.style.backgroundColor = 'rgba(10, 10, 10, 0.7)';
-                this.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+            container.addEventListener('mouseleave', function() {
+                // Remove glow effect
+                this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.8)';
             });
         });
     }
